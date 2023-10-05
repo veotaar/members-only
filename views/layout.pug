@@ -4,4 +4,13 @@ html
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
+    nav.navbar
+      ul(role='list')
+        li
+          a(href='/') Home
+        li.push-to-right
+          a(href='/sign-up') Create Account
+        li
+          a(href='/login') Login
+
     block content
