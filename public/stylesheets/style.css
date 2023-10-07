@@ -31,6 +31,12 @@ body {
   line-height: 1.75rem;
 }
 
+.navbar p {
+  font-weight: bold;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
 .navbar a:hover {
   border-bottom: 2px solid #0f172a;
 }

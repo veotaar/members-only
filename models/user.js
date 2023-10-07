@@ -8,6 +8,10 @@ const UserSchema = new Schema({
   isAdmin: { type: Boolean, required: true }
 });
 
+UserSchema.statics.isUsernameExists = async function(username) {
+  return this.exists({ username }).collation({ locale: 'en', strength: 2 }).exec();
+}
+
 const User = mongoose.model('User', UserSchema);
 
 module.exports = User;
