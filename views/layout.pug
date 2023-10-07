@@ -8,9 +8,12 @@ html
       ul(role='list')
         li
           a(href='/') Home
-        li.push-to-right
-          a(href='/sign-up') Create Account
-        li
-          a(href='/login') Login
+        unless currentUser
+          li.push-to-right
+            a(href='/signup') Create Account
+          li
+            | &verbar;
+          li
+            a(href='/login') Login
 
     block content
