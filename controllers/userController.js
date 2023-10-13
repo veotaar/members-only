@@ -61,3 +61,43 @@ exports.create_account_post = [
     }
   })
 ];
+
+exports.become_member_post = [
+  body('password', 'password must contain at least 8 characters')
+    .trim()
+    .isLength({ min: 8, max: 32 })
+    .escape(),
+
+  body('password').custom((value) => {
+    if (value !== process.env.MEMBERSHIP_PASS) {
+      throw new Error('Membership password is wrong.');
+    } else {
+      return true;
+    }
+  }),
+
+  (req, res, next) => {
+    console.log(req.body);
+    next();
+  },
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+    console.log(errors);
+    if (!errors.isEmpty()) {
+      res.render('member', {
+        title: 'Become a member!',
+        errors: errors.array(),
+      });
+    } else {
+      // membership password is correct
+      try {
+        const id = req.user._id;
+        await User.findByIdAndUpdate(id, { isMember: true }).exec();
+        res.redirect('/')
+      } catch(err) {
+        return next(err);
+      }
+    }
+  }),
+];

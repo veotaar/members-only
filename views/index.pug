@@ -2,5 +2,9 @@ extends layout
 
 block content
   div.container
+    if currentUser
+      unless currentUser.isMember
+        a(href='/member') Become a member!
+
     h1= title
     p Welcome to #{title}

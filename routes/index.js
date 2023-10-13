@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
+const isAuth = require('../lib/authMiddleware').isAuth;
+
 const user_controller = require('../controllers/userController');
 const passport = require('passport');
 
@@ -11,11 +13,21 @@ router.get('/', function(req, res, next) {
 
 router.get('/signup', (req, res) => res.render('sign-up-form', {title: 'Create Account'}));
 
-router.get('/login', (req, res) => res.render('login-form', {title: 'Login'}));
+router.get('/login', (req, res) => {
+  console.log(req.session.messages);
+  res.render('login-form', { title: 'Login', errors: req.session.messages });
+});
+
+// protected route
+router.get('/member', isAuth, (req, res) => {
+  res.render('member', {title: 'Become a member!'});
+})
 
 router.post('/signup', user_controller.create_account_post);
 
-router.post('/login', passport.authenticate('local', {successRedirect: '/', failureRedirect: '/login'}));
+router.post('/login', passport.authenticate('local', {successRedirect: '/', failureRedirect: '/login', failureMessage: 'Incorrect username or password.'}));
+
+router.post('/member', user_controller.become_member_post);
 
 router.get('/logout', (req, res, next) => {
   req.logout((err) => {
