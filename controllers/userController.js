@@ -101,3 +101,43 @@ exports.become_member_post = [
     }
   }),
 ];
+
+exports.become_admin_post = [
+  body('password', 'password must contain at least 8 characters')
+    .trim()
+    .isLength({ min: 8, max: 32 })
+    .escape(),
+
+  body('password').custom((value) => {
+    if (value !== process.env.ADMIN_PASS) {
+      throw new Error('Admin password is wrong.');
+    } else {
+      return true;
+    }
+  }),
+
+  (req, res, next) => {
+    console.log(req.body);
+    next();
+  },
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+    console.log(errors);
+    if (!errors.isEmpty()) {
+      res.render('admin', {
+        title: 'Become an admin!',
+        errors: errors.array(),
+      });
+    } else {
+      // admin password is correct
+      try {
+        const id = req.user._id;
+        await User.findByIdAndUpdate(id, { isAdmin: true }).exec();
+        res.redirect('/');
+      } catch (err) {
+        return next(err);
+      }
+    }
+  }),
+];

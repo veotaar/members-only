@@ -1,10 +1,16 @@
 extends layout
 
 block content
+  - var isNotMember = currentUser ? !currentUser.isMember : false;
+  - var isMemberButNotAdmin = currentUser ? currentUser.isMember && !currentUser.isAdmin : false;
   div.container
     if currentUser
-      unless currentUser.isMember
+      if isNotMember
         a(href='/member') Become a member!
+      if isMemberButNotAdmin
+        a(href='/admin') Become an admin!
+
+
 
     h1= title
     p Welcome to #{title}
