@@ -1,16 +1,34 @@
 extends layout
 
 block content
+  - var isMember = currentUser ? currentUser.isMember : false;
   - var isNotMember = currentUser ? !currentUser.isMember : false;
   - var isMemberButNotAdmin = currentUser ? currentUser.isMember && !currentUser.isAdmin : false;
+
+  .container
+    h1= title
+    p Welcome to #{title}
+
   div.container
     if currentUser
       if isNotMember
         a(href='/member') Become a member!
       if isMemberButNotAdmin
         a(href='/admin') Become an admin!
+      div
+        if currentUser.isMember
+          a(href='/new') Post a message!
 
 
+  .container
+    div#message-container
+      if messages
+        each message in messages
+          .message
+            if isMember
+              p #{message.author.username} says:
+            else
+              p someone says:
+            p= message.text
 
-    h1= title
-    p Welcome to #{title}
+
