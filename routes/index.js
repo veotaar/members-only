@@ -3,6 +3,7 @@ const router = express.Router();
 
 const isAuth = require('../lib/authMiddleware').isAuth;
 const isMember = require('../lib/authMiddleware').isMember;
+const isAdmin = require('../lib/authMiddleware').isAdmin;
 
 const user_controller = require('../controllers/userController');
 const message_controller = require('../controllers/messageController');
@@ -14,7 +15,6 @@ router.get('/', message_controller.get_messages);
 router.get('/signup', (req, res) => res.render('sign-up-form', {title: 'Create Account'}));
 
 router.get('/login', (req, res) => {
-  console.log(req.session.messages);
   res.render('login-form', { title: 'Login', errors: req.session.messages });
 });
 
@@ -32,6 +32,8 @@ router.get('/admin', isAuth, isMember, (req, res) => {
 router.get('/new', isAuth, isMember, (req, res) => {
   res.render('new', {title: 'Send a message!'});
 })
+
+router.get('/delete/:id', isAdmin, message_controller.delete_message);
 
 router.post('/signup', user_controller.create_account_post);
 

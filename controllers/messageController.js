@@ -18,7 +18,7 @@ exports.create_message_post = [
         errors: errors.array(),
       });
     } else {
-      // data is valid, send message
+      // data is valid, save message
       try {
         const messageText = req.body.message;
         const userId = req.user._id;
@@ -48,6 +48,18 @@ exports.get_messages = asyncHandler(async (req, res, next) => {
     res.render('index', { title: 'Express', messages });
 
   } catch(err) {
+    return next(err);
+  }
+})
+
+exports.delete_message = asyncHandler(async(req, res, next) => {
+  try {
+    const messageId = req.params.id;
+    const message = await Message.findByIdAndDelete(messageId);
+
+    res.redirect('/');
+
+  } catch (err) {
     return next(err);
   }
 })

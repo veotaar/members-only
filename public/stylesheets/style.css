@@ -46,3 +46,15 @@ body {
   margin-inline: auto;
   padding-block: 12px;
 }
+
+.messages-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.message {
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 0.5rem;
+}
